@@ -1,0 +1,23 @@
+{
+  "name": "soul-layer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
+    "@types/node": "^22.19.7",
+    "dotenv": "^17.2.4",
+    "hardhat": "^2.22.0",
+    "typescript": "~5.8.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
+  }
+}
