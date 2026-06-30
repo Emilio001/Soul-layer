@@ -22,22 +22,29 @@ Estructura del repositorio
 soul-layer/
 ├── contracts/
 │   └── SoulToken.sol
+
 ├── scripts/
 │   ├── deploy.js
 │   ├── mintSoul.js
 │   ├── verifyHuman.js
 │   ├── updateReputation.js
 │   └── readProfile.js
+
 ├── test/
 │   └── SoulToken.test.js
+
 ├── frontend/
 │   └── src/
 │       ├── App.jsx
 │       └── abi/
 │           └── SoulTokenABI.js
+
 ├── hardhat.config.cjs
+
 ├── package.json
+
 ├── .env.example
+
 └── README.md
 
 
