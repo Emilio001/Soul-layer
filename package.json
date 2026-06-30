@@ -1,14 +1,16 @@
 {
   "name": "soul-layer",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sistema de identidad digital descentralizada y tokenizada para plataformas multimedia",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.js --network amoy"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["blockchain", "identity", "soulbound-token", "solidity"],
+  "author": "Emilio",
+  "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.2",
     "@types/node": "^22.19.7",
