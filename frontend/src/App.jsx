@@ -2,13 +2,22 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { SoulTokenABI } from "./abi/SoulTokenABI";
 
-const CONTRACT_ADDRESS = "0x48381C8d67f6f9187d78261a5934FbbE49E06C5b";
+const CONTRACT_ADDRESS = "0x342C1023Dc80b395FB7F381C3316d75dE03303e4";
 const AMOY_CHAIN_ID = "0x13882";
 const EXPLORER_URL = "https://amoy.polygonscan.com";
+
+const EVENT_LABELS = [
+  "Contenido publicado",
+  "Valoración positiva",
+  "Valoración negativa",
+  "Recompensa comunitaria",
+  "Penalización por moderación",
+];
 
 function App() {
   const [account, setAccount] = useState("");
   const [profile, setProfile] = useState(null);
+  const [history, setHistory] = useState([]);
   const [status, setStatus] = useState("");
 
   async function switchToAmoy() {
@@ -65,11 +74,33 @@ function App() {
         tokenId: Number(data[5]),
       });
 
+      await loadReputationHistory(contract, account);
+
       setStatus("Perfil cargado correctamente desde Polygon Amoy.");
     } catch (error) {
       console.error(error);
       setStatus("No se pudo cargar el perfil. Revisa que MetaMask esté en Polygon Amoy.");
     }
+  }
+
+  async function loadReputationHistory(contract, userAddress) {
+    // Recupera el historial completo de eventos ReputationChanged del usuario
+    // directamente desde los registros de la blockchain, sin base de datos.
+    const filter = contract.filters.ReputationChanged(userAddress);
+    const events = await contract.queryFilter(filter);
+
+    const parsed = events.map((event) => ({
+      blockNumber: event.blockNumber,
+      oldReputation: Number(event.args.oldReputation),
+      newReputation: Number(event.args.newReputation),
+      eventType: Number(event.args.eventType),
+      eventLabel: EVENT_LABELS[Number(event.args.eventType)] ?? "Desconocido",
+      platform: event.args.platform,
+      txHash: event.transactionHash,
+    }));
+
+    // Más recientes primero
+    setHistory(parsed.reverse());
   }
 
   function formatDate(timestamp) {
@@ -188,6 +219,35 @@ function App() {
                 </div>
               </div>
             </div>
+          </section>
+        )}
+
+        {history.length > 0 && (
+          <section style={styles.card}>
+            <h2>Historial de eventos reputacionales</h2>
+
+            {history.map((event, index) => (
+              <div key={index} style={styles.historyRow}>
+                <div>
+                  <strong>{event.eventLabel}</strong>
+                  <p style={styles.historyMeta}>
+                    Bloque #{event.blockNumber} · {event.oldReputation} → {event.newReputation}
+                  </p>
+                  <p style={styles.historyMeta}>
+                    Plataforma: {event.platform}
+                  </p>
+                </div>
+
+                <a
+                  href={`${EXPLORER_URL}/tx/${event.txHash}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={styles.link}
+                >
+                  Ver transacción
+                </a>
+              </div>
+            ))}
           </section>
         )}
 
@@ -361,6 +421,21 @@ const styles = {
     background: "rgba(0,0,0,0.18)",
     color: "#c5c5d8",
   },
+  historyRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "14px",
+    borderRadius: "12px",
+    background: "rgba(0,0,0,0.2)",
+    marginBottom: "10px",
+  },
+  historyMeta: {
+    color: "#b8b8d1",
+    fontSize: "13px",
+    margin: "2px 0 0 0",
+  },
 };
 
+export default App;
 export default App;
