@@ -20,6 +20,8 @@ Interfaz web descentralizada: dApp funcional construida con React, Vite y ethers
 Estructura del repositorio
 
 soul-layer/
+
+
 ├── contracts/
 │   └── SoulToken.sol
 
